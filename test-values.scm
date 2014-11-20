@@ -8,31 +8,32 @@
 (define (prim-test-values msg expects thunk)
   (flush)
   (receive vals (thunk)
-    (if (= (length vals) (length expects))
-        (for-each-with-index
-         (lambda (i r expect)
-           (test-count++)
-           (let ((cmp test-check)
+    (cond ((= (length vals) (length expects))
+           (for-each-with-index
+            (lambda (i r expect)
+              (test-count++)
+              (let ((cmp test-check)
                                         ;(expect (if (pair? expect) (car expect) expect))
                                         ;(cmp (if (pair? expect) (cadr expect) test-check))
-                 )
-             (format/ss #t "test ~a(value ~a), expects ~s ==> " msg i expect)
-             (cond [(cmp expect r)
-                    (format #t "ok\n")
-                    (test-pass++)]
-                   [else
-                    (format/ss #t "ERROR: GOT ~S\n" r)
-                    (set! *discrepancy-list*
-                          (cons (list msg expect r) *discrepancy-list*))
-                    (test-fail++)])))
-         vals expects)
-        (for-each (lambda (_)
-                    (test-count++)
-                    (format/ss #t "ERROR: GOT ~S\n" vals)
-                    (set! *discrepancy-list*
-                          (cons (list msg expects vals) *discrepancy-list*))
-                    (test-fail++))
-                  expects))
+                    )
+                (format/ss #t "test ~a(value ~a), expects ~s ==> " msg i expect)
+                (cond [(cmp expect r)
+                       (format #t "ok\n")
+                       (test-pass++)]
+                      [else
+                       (format/ss #t "ERROR: GOT ~S\n" r)
+                       (set! *discrepancy-list*
+                             (cons (list msg expect r) *discrepancy-list*))
+                       (test-fail++)])))
+            vals expects))
+          (else
+           (for-each (lambda (_)
+                       (test-count++)
+                       (format/ss #t "ERROR: GOT ~S\n" vals)
+                       (set! *discrepancy-list*
+                             (cons (list msg expects vals) *discrepancy-list*))
+                       (test-fail++))
+                     expects)))
     (flush)))
 
 (define (test-values msg expects thunk)
