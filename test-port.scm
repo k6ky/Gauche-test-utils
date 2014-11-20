@@ -22,6 +22,9 @@
            (test-pass++)
            (format/ss #t "test ~a, expects ~s ==> ok\n"
                       msg expect))
+          ((not (string? r))
+           (format/ss #t "test ~a, expects ~s ==> ERROR: GOT -S\n"
+                      msg expect r))
           (else
            (test-fail++)
            (format/ss #t "test ~a ==> Error\n" msg)
