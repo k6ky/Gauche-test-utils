@@ -29,7 +29,9 @@
            (test-fail++)
            (format/ss #t "test ~a ==> Error\n" msg)
            (diff-report expect r
-                        :writer test-port-writer)))))
+                        :writer test-port-writer)
+           (set! *discrepancy-list*
+                 (cons (list msg expect r) *discrepancy-list*))))))
 
 (define (test-port msg expect proc)
   (prim-test-port msg expect
