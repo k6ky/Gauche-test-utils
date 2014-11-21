@@ -14,18 +14,21 @@
   (format/ss #t "test ~a, ~a times trying ==> " msg times)
   (flush)
   (test-count++)
-  (let ((fail-cases
-         (remove (lambda (test-case) (eq? #t (proc test-case))) test-cases)))
-    (cond ((= 0 (length #?=fail-cases))
+  (let* ((tryings (map (lambda (test-case) (cons (apply proc test-case) test-case))
+                      test-cases))
+         (fail-cases (remove (lambda (trying) (eq? #t (car trying))) tryings)))
+    (cond ((= 0 (length fail-cases))
            (format #t "ok\n")
            (test-pass++))
           (else
            (format/ss #t "ERROR: ~a cases fail\n" (length fail-cases))
-           (format/ss #t "failed cases are: ~S\n" fail-cases)
+           (format/ss #t "failed cases are:\n")
+           (for-each (^f (format/ss #t "input ~S get ~S\n" (cdr f) (car f)))
+                     fail-cases)
            (set! *discrepancy-list*
                  (cons (list msg
-                             (format "~a cases success" times)
-                             (format "~a cases success" (- times
+                             (format "~S cases success" times)
+                             (format "~S cases success" (- times
                                                            (length fail-cases))))
                        *discrepancy-list*))
            (test-fail++)))))
@@ -34,7 +37,9 @@
   (prim-test-quickcheck
    msg times
    (lambda (test-case)
-     (guard (e [else
+     (guard (e [(condition-has-type? e <unhandled-signal-error>)
+                (raise e)] ;; to interrupt the whole test
+               [else
                 (when *test-report-error*
                   (report-error e))
                 (make <test-error>
