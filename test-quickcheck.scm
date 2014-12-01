@@ -36,7 +36,7 @@
 (define (test-quickcheck msg times property :rest generators)
   (prim-test-quickcheck
    msg times
-   (lambda (test-case)
+   (lambda test-case
      (guard (e [(condition-has-type? e <unhandled-signal-error>)
                 (raise e)] ;; to interrupt the whole test
                [else
@@ -47,7 +47,7 @@
                    :message (if (is-a? e <message-condition>)
                                 (ref e 'message)
                                 e))])
-       (property test-case)))
+       (apply property test-case)))
    (map (^x (map (^g (g x)) generators))
         (iota times 1))))
 
