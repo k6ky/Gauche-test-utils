@@ -1,7 +1,8 @@
 (define-module test-utils.test-port
   (extend gauche.test)
   (use text.diff)
-  (export test-port))
+  (export test-with-output-port
+          test-with-input-port))
 (select-module test-utils.test-port)
 
 (define (test-port-writer element type)
@@ -33,7 +34,7 @@
            (set! *discrepancy-list*
                  (cons (list msg expect r) *discrepancy-list*))))))
 
-(define (test-port msg expect proc)
+(define (test-with-output-port msg expect proc)
   (prim-test-port msg expect
                   (lambda ()
                     (guard (e [else
@@ -45,5 +46,8 @@
                                               (ref e 'message)
                                               e))])
                       (call-with-output-string proc)))))
+
+(define (test-with-input-port msg expect input proc)
+  (test* msg expect (call-with-input-string input proc)))
 
 (provide "test-utils.test-port")
