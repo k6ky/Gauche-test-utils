@@ -1,8 +1,8 @@
-(define-module test-utils.test-by-exception
+(define-module test-utils.test-by-expection
   (use gauche.test)
   (export test-by-ex*
           coin-test*))
-(select-module test-utils.test-by-exception)
+(select-module test-utils.test-by-expection)
 
 (define (trying number thunk)
   (/ (fold (lambda (_ acc)
@@ -33,4 +33,4 @@
                   (if expr 1 0)))))
 
 
-(provide "test-by-exception")
+(provide "test-by-expection")
