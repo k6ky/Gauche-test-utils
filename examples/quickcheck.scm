@@ -18,7 +18,7 @@
         ((compare (car list) (cadr list))
          (sorted? compare (cdr list)))
         (else #f)))
-(test-quickcheck "Sort" 100 (.$ (pa$ sorted? <=) sort) (pa$ gen-list gen-integer))
+(test-quickcheck "Sort" 100 ($ sorted? <= $ sort $) (pa$ gen-list gen-integer))
 
 (test-section "Composite input type")
 (define (compare-char-and-integer x y)

@@ -15,7 +15,7 @@
   (flush)
   (test-count++)
   (let* ((tryings (map (lambda (test-case) (cons (apply proc test-case) test-case))
-                      test-cases))
+                       test-cases))
          (fail-cases (remove (lambda (trying) (eq? #t (car trying))) tryings)))
     (cond ((= 0 (length fail-cases))
            (format #t "ok\n")
