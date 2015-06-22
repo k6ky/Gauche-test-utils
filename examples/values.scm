@@ -4,7 +4,7 @@
 (test-start "Example of Multiple Values Test")
 
 (test-values* "quotient and remiainder" (2 1) (quotient&remainder 7 3))
-(test-values* "quotient and remiainder failed"
-              (0 0) (quotient&remainder 7 3))
+(test-values* "only first value failed and reported"
+              (0 1) (quotient&remainder 7 3))
 
 (test-end)

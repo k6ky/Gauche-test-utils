@@ -32,6 +32,6 @@
                    (.$ integer? fuga))
 (define (piyo a b)
   (/ a b))
-(test-combinations "failed case" ((1) (1 0)) (.$ integer? piyo))
+(test-combinations "failed case" ((1) (0 1)) (.$ integer? piyo))
 
 (test-end)
