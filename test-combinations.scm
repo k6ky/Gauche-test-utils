@@ -21,13 +21,13 @@
      (for-each (lambda (args)
                  (test* (make-test-name test-name args)
                         #t
-                         (apply pred args)))
+                        (apply pred args)))
                (arguments-combinations (list (list arg ...) ...))))
     ((test-combinations test-name (arg ...) pred)
      (for-each (lambda (args)
                  (test* (make-test-name test-name args)
                         #t
-                         (apply pred args)))
+                        (apply pred args)))
                (arguments-combinations (list arg ...))))))
 
 (provide "test-combinations")
