@@ -1,6 +1,6 @@
 (define-module test-utils.test-quickcheck
   (extend gauche.test)
-  (use math.mt-random)
+  (use srfi-27)
   (export test-quickcheck
           composite-generator
           gen-integer
@@ -44,29 +44,29 @@
                   (report-error e))
                 (make <test-error>
                   :class (class-of e)
-                   :message (if (is-a? e <message-condition>)
-                                (ref e 'message)
-                                e))])
+                  :message (if (is-a? e <message-condition>)
+                             (ref e 'message)
+                             e))])
        (apply property test-case)))
    (map (^x (map (^g (g x)) generators))
         (iota times 1))))
 
-(define mt (make <mersenne-twister> :seed (sys-time)))
+(random-source-randomize! default-random-source)
 
 (define (composite-generator . generators)
   (lambda (x)
-    ((list-ref generators (mt-random-integer mt (length generators)))
+    ((list-ref generators (random-integer (length generators)))
      x)))
 
 (define (gen-integer x)
-  (mt-random-integer mt (* x 10)))
+  (random-integer (* x 10)))
 (define (gen-boolean x)
-  (= (mt-random-integer mt 2) 0))
+  (= (random-integer 2) 0))
 (define (gen-char x)
-  (integer->char (mt-random-integer mt 128)))
+  ($ integer->char $ random-integer 128))
 (define (gen-list gen x)
-  (map (^_ (gen x)) (make-list (gen-integer x))))
+  (map (^_ (gen x)) ($ make-list $ gen-integer x)))
 (define (gen-string)
-  (list->string (gen-list gen-char)))
+  ($ list->string $ gen-list gen-char))
 
 (provide "test-quickcheck")
